@@ -1,18 +1,30 @@
 {
-    "name": "coajaxial/messaging-mediator",
-    "description": "Send messages directly from your domain model without any dependencies",
-    "type": "library",
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "coajaxial",
-            "email": "coajaxial@gmail.com"
-        }
-    ],
-    "require": {
-        "php": "^7.3"
-    },
-    "require-dev": {
-        "phpunit/phpunit": "^9"
+  "name": "coajaxial/messaging-mediator",
+  "description": "Send messages directly from your domain model without any dependencies",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "coajaxial",
+      "email": "coajaxial@gmail.com"
     }
+  ],
+  "require": {
+    "php": "^7.3"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^9",
+    "vimeo/psalm": "@dev"
+  },
+  "autoload": {
+    "psr-4": {
+      "Coajaxial\\MessagingMediator\\": "src"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Coajaxial\\MessagingMediator\\Test\\Unit\\": "tests/Unit",
+      "Coajaxial\\MessagingMediator\\Test\\Integration\\": "tests/Integration"
+    }
+  }
 }

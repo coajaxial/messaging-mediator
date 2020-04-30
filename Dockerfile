@@ -18,6 +18,9 @@ RUN apk add --update --no-cache \
     php7-soap \
     php7-pcntl \
     php7-posix \
+    php7-simplexml \
+    git \
+    openssh \
     && addgroup -g 1000 www \
     && adduser -D -u 1000 -G www www \
     && install -d -o www -g www /opt/project \
