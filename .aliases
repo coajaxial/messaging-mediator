@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+alias php='docker run --rm -ti -v $(pwd):/opt/project -u 1000 coajaxial/sf4-php-fpm php';
+alias composer='docker run --rm -ti -v $(pwd):/opt/project -u 1000 coajaxial/sf4-php-fpm composer';
+alias phpunit='docker run --rm -ti -v $(pwd):/opt/project -u 1000 coajaxial/sf4-php-fpm php -d zend.assertions=1 vendor/bin/phpunit';
