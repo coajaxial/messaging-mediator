@@ -41,8 +41,8 @@ class MessageBusStubTest extends TestCase
 
     /**
      * @covers \Coajaxial\MessagingMediator\Testing\MessageBusStub::ensureNoUnhandledMessagesLeft
-     * @uses \Coajaxial\MessagingMediator\Testing\MessageBusStub::dispatch()
-     * @uses \Coajaxial\MessagingMediator\Testing\UnhandledMessagesLeft::messages()
+     * @uses   \Coajaxial\MessagingMediator\Testing\MessageBusStub::dispatch()
+     * @uses   \Coajaxial\MessagingMediator\Testing\UnhandledMessagesLeft::messages()
      */
     public function test_it_will_not_clear_unhandled_messages(): void
     {

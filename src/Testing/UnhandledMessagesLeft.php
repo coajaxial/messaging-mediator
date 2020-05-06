@@ -6,7 +6,7 @@ use RuntimeException;
 
 final class UnhandledMessagesLeft extends RuntimeException
 {
-    public static function messages(...$messages): self
+    public static function messages(object ...$messages): self
     {
         return new self(
             sprintf(

@@ -15,7 +15,13 @@ final class MessagingMediator
         $this->messageBus = $messageBus;
     }
 
-    /** @return mixed */
+    /**
+     * @psalm-template TReturn
+     * @psalm-param    Generator<mixed, object, mixed, TReturn> $ctx
+     * @psalm-return   TReturn
+     *
+     * @return mixed
+     */
     public function mediate(Generator $ctx)
     {
         while ($ctx->valid()) {

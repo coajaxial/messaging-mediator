@@ -17,7 +17,9 @@ final class MessageBusStub implements MessageBus
 
     public function dispatch(object $message)
     {
-        $this->unhandledMessages[] = $message;
+        $this->unhandledMessages->enqueue($message);;
+
+        return null;
     }
 
     public function ensureNoUnhandledMessagesLeft(): void

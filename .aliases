@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
 alias php='docker run --rm -ti -v $(pwd):/opt/project -u 1000 coajaxial/messaging-mediator php';
+alias psalm='docker run --rm -ti -v $(pwd):/opt/project -u 1000 coajaxial/messaging-mediator vendor/bin/psalm';
 alias composer='docker run --rm -ti -v $(pwd):/opt/project -u 1000 coajaxial/messaging-mediator composer';
 alias phpunit='docker run --rm -ti -v $(pwd):/opt/project -u 1000 coajaxial/messaging-mediator php -d zend.assertions=1 vendor/bin/phpunit';
