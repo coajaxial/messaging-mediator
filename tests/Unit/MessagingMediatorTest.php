@@ -89,7 +89,7 @@ class MessagingMediatorTest extends TestCase
             return $answerToLive + 1;
         })();
 
-        /** @psalm-var Generator<object> $mainContext */
+        /** @psalm-var Generator<mixed, object, mixed, int> $mainContext */
         $mainContext = (static function () use (&$increasedAnswerToLiveCtx) {
             yield new MessagingMediatorTest_MessageA();
             /** @var int $increasedAnswerToLive */
@@ -117,7 +117,6 @@ class MessagingMediatorTest extends TestCase
                 )
             );
 
-        /** @var int $increasedAnswerToLive */
         $increasedAnswerToLive = $this->SUT->mediate($mainContext);
 
         self::assertEquals(43, $increasedAnswerToLive);

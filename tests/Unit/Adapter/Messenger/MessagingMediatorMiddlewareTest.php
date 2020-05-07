@@ -3,11 +3,12 @@
 namespace Coajaxial\MessagingMediator\Test\Unit\Adapter\Messenger;
 
 use Coajaxial\MessagingMediator\Adapter\Messenger\MessagingMediatorMiddleware;
-use Coajaxial\MessagingMediator\MessagingMediator;
 use Coajaxial\MessagingMediator\MessagingMediatorInterface;
+use Generator;
 use PHPUnit\Framework\MockObject\MockObject;
 use stdClass;
 use Symfony\Component\Messenger\Envelope;
+use Symfony\Component\Messenger\Middleware\StackInterface;
 use Symfony\Component\Messenger\Stamp\HandledStamp;
 use Symfony\Component\Messenger\Test\Middleware\MiddlewareTestCase;
 
@@ -17,7 +18,7 @@ use Symfony\Component\Messenger\Test\Middleware\MiddlewareTestCase;
 class MessagingMediatorMiddlewareTest extends MiddlewareTestCase
 {
     /**
-     * @var MessagingMediator&MockObject
+     * @var MessagingMediatorInterface&MockObject
      */
     private $mediator;
 
@@ -35,7 +36,9 @@ class MessagingMediatorMiddlewareTest extends MiddlewareTestCase
             ->expects($this->never())
             ->method('mediate');
 
-        $this->SUT->handle(new Envelope(new stdClass()), $this->getStackMock());
+        /** @var StackInterface $stack */
+        $stack = $this->getStackMock();
+        $this->SUT->handle(new Envelope(new stdClass()), $stack);
     }
 
     /**
@@ -49,7 +52,9 @@ class MessagingMediatorMiddlewareTest extends MiddlewareTestCase
 
         $handledStamp = new HandledStamp(42, 'some_handler');
 
-        $this->SUT->handle(new Envelope(new stdClass(), [$handledStamp]), $this->getStackMock());
+        /** @var StackInterface $stack */
+        $stack = $this->getStackMock();
+        $this->SUT->handle(new Envelope(new stdClass(), [$handledStamp]), $stack);
     }
 
     /**
@@ -57,7 +62,7 @@ class MessagingMediatorMiddlewareTest extends MiddlewareTestCase
      */
     public function test_it_will_delegate_generator_to_mediator(): void
     {
-        $ctx = (static function () {
+        $ctx = (static function (): Generator {
             yield 42;
         })();
 
@@ -68,7 +73,9 @@ class MessagingMediatorMiddlewareTest extends MiddlewareTestCase
 
         $handledStamp = new HandledStamp($ctx, 'some_handler');
 
-        $this->SUT->handle(new Envelope(new stdClass(), [$handledStamp]), $this->getStackMock());
+        /** @var StackInterface $stack */
+        $stack = $this->getStackMock();
+        $this->SUT->handle(new Envelope(new stdClass(), [$handledStamp]), $stack);
     }
 
     /**
@@ -76,7 +83,7 @@ class MessagingMediatorMiddlewareTest extends MiddlewareTestCase
      */
     public function test_it_will_replace_handled_stamp_result_with_real_result(): void
     {
-        $ctx = (static function () {
+        $ctx = (static function (): Generator {
             yield 21;
         })();
 
@@ -87,7 +94,9 @@ class MessagingMediatorMiddlewareTest extends MiddlewareTestCase
 
         $handledStamp = new HandledStamp($ctx, 'some_handler');
 
-        $envelope = $this->SUT->handle(new Envelope(new stdClass(), [$handledStamp]), $this->getStackMock());
+        /** @var StackInterface $stack */
+        $stack    = $this->getStackMock();
+        $envelope = $this->SUT->handle(new Envelope(new stdClass(), [$handledStamp]), $stack);
 
         /** @var HandledStamp|null $handledStamp */
         $handledStamp = $envelope->last(HandledStamp::class);
