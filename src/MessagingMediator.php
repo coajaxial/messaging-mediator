@@ -5,7 +5,7 @@ namespace Coajaxial\MessagingMediator;
 use Generator;
 use Throwable;
 
-final class MessagingMediator
+final class MessagingMediator implements MessagingMediatorInterface
 {
     /** @var MessageBus */
     private $messageBus;
@@ -15,18 +15,12 @@ final class MessagingMediator
         $this->messageBus = $messageBus;
     }
 
-    /**
-     * @psalm-template TReturn
-     * @psalm-param    Generator<mixed, object, mixed, TReturn> $ctx
-     * @psalm-return   TReturn
-     *
-     * @return mixed
-     */
     public function mediate(Generator $ctx)
     {
         while ($ctx->valid()) {
             $message = $ctx->current();
             try {
+                /** @psalm-suppress MixedAssignment */
                 $result = $this->messageBus->dispatch($message);
             } catch (Throwable $e) {
                 $ctx->throw($e);

@@ -56,6 +56,7 @@ class MessageBusAdapterTest extends TestCase
             ->with(self::identicalTo($message))
             ->willReturn(new Envelope($message, [$handledStamp]));
 
+        /** @var int $result */
         $result = $this->SUT->dispatch($message);
 
         self::assertEquals(42, $result);

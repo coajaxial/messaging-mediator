@@ -41,6 +41,7 @@ class MessagingMediatorTest extends TestCase
 
     public function test_it_dispatches_yielded_messages_on_bus(): void
     {
+        /** @psalm-var Generator<object> $ctx */
         $ctx = (static function (): Generator {
             yield new MessagingMediatorTest_MessageA();
         })();
@@ -57,7 +58,9 @@ class MessagingMediatorTest extends TestCase
         $actualResult   = null;
         $expectedResult = 42;
 
+        /** @psalm-var Generator<object> $ctx */
         $ctx = (static function () use (&$actualResult): Generator {
+            /** @var int $actualResult */
             $actualResult = yield new MessagingMediatorTest_MessageA();
         })();
 
@@ -73,7 +76,9 @@ class MessagingMediatorTest extends TestCase
 
     public function test_nested_contexts(): void
     {
+        /** @psalm-var Generator<object> $increasedAnswerToLiveCtx */
         $increasedAnswerToLiveCtx = (static function () {
+            /** @var int $answerToLive */
             $answerToLive = yield new MessagingMediatorTest_MessageB();
 
             try {
@@ -84,8 +89,10 @@ class MessagingMediatorTest extends TestCase
             return $answerToLive + 1;
         })();
 
+        /** @psalm-var Generator<object> $mainContext */
         $mainContext = (static function () use (&$increasedAnswerToLiveCtx) {
             yield new MessagingMediatorTest_MessageA();
+            /** @var int $increasedAnswerToLive */
             $increasedAnswerToLive = yield from $increasedAnswerToLiveCtx;
             yield new MessagingMediatorTest_MessageD();
 
@@ -110,6 +117,7 @@ class MessagingMediatorTest extends TestCase
                 )
             );
 
+        /** @var int $increasedAnswerToLive */
         $increasedAnswerToLive = $this->SUT->mediate($mainContext);
 
         self::assertEquals(43, $increasedAnswerToLive);
@@ -117,6 +125,7 @@ class MessagingMediatorTest extends TestCase
 
     public function test_it_will_throw_exception_in_context_when_message_dispatch_throws(): void
     {
+        /** @psalm-var Generator<object> $ctx */
         $ctx = (static function (): Generator {
             try {
                 yield new MessagingMediatorTest_MessageA();
@@ -136,6 +145,7 @@ class MessagingMediatorTest extends TestCase
 
     public function test_it_will_continue_normally_when_exception_is_catched_in_context(): void
     {
+        /** @psalm-var Generator<object> $ctx */
         $ctx = (static function (): Generator {
             try {
                 yield new MessagingMediatorTest_MessageA();
