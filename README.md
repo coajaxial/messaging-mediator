@@ -43,6 +43,23 @@ final class Post
 }
 ```
 
+Example of a command handler:
+
+```php
+final class DraftPostHandler {
+
+    public function __invoke(DraftPost $command): Generator
+    {
+        $post = yield from Post::draft();
+
+        yield from $post->publish();
+
+        // ...
+    }   
+
+}
+```
+
 ## Contribute
 
 ### Build docker image
