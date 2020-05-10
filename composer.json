@@ -3,6 +3,7 @@
   "description": "Send messages directly from your domain model without any dependencies",
   "type": "library",
   "license": "MIT",
+  "keywords": ["ddd", "symfony-messenger", "domain model", "php-generators"],
   "authors": [
     {
       "name": "coajaxial",
