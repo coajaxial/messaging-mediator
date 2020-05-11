@@ -1,5 +1,8 @@
 # Messaging Mediator
 
+![Unit tests](https://github.com/coajaxial/messaging-mediator/workflows/Unit%20tests/badge.svg)
+![Integration tests](https://github.com/coajaxial/messaging-mediator/workflows/Integration%20tests/badge.svg)
+
 Send messages directly from your domain model without any dependencies
 
 ## How it works
