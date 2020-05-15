@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 <psalm
-    errorLevel="2"
-    resolveFromConfigFile="true"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns="https://getpsalm.org/schema/config"
-    xsi:schemaLocation="https://getpsalm.org/schema/config vendor/vimeo/psalm/config.xsd"
+        errorLevel="2"
+        resolveFromConfigFile="true"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="https://getpsalm.org/schema/config"
+        xsi:schemaLocation="https://getpsalm.org/schema/config vendor/vimeo/psalm/config.xsd"
 >
     <projectFiles>
         <directory name="src"/>
@@ -13,18 +13,21 @@
             <directory name="vendor"/>
         </ignoreFiles>
     </projectFiles>
-    <issueHandlers>
-        <!-- https://github.com/sebastianbergmann/phpunit/issues/3742 - PHPUnit mock objects break all over the place -->
-        <InternalMethod>
-            <errorLevel type="suppress">
-                <referencedMethod name="PHPUnit\Framework\MockObject\Builder\InvocationMocker::willReturn" />
-                <referencedMethod name="PHPUnit\Framework\MockObject\Builder\InvocationMocker::method" />
-                <referencedMethod name="PHPUnit\Framework\MockObject\Builder\InvocationMocker::willReturnOnConsecutiveCalls" />
-                <referencedMethod name="PHPUnit\Framework\MockObject\Builder\InvocationMocker::with" />
-                <referencedMethod name="PHPUnit\Framework\MockObject\Builder\InvocationMocker::will" />
-                <referencedMethod name="PHPUnit\Framework\MockObject\Builder\InvocationMocker::withConsecutive" />
-                <referencedMethod name="PHPUnit\Framework\MockObject\Builder\InvocationMocker::willThrowException" />
-            </errorLevel>
-        </InternalMethod>
-    </issueHandlers>
-<plugins><pluginClass class="Psalm\PhpUnitPlugin\Plugin"/></plugins></psalm>
+        <issueHandlers>
+            <!-- https://github.com/sebastianbergmann/phpunit/issues/3742 - PHPUnit mock objects break all over the place -->
+            <InternalMethod>
+                <errorLevel type="suppress">
+                    <referencedMethod name="PHPUnit\Framework\MockObject\Builder\InvocationMocker::willReturn" />
+                    <referencedMethod name="PHPUnit\Framework\MockObject\Builder\InvocationMocker::method" />
+                    <referencedMethod name="PHPUnit\Framework\MockObject\Builder\InvocationMocker::willReturnOnConsecutiveCalls" />
+                    <referencedMethod name="PHPUnit\Framework\MockObject\Builder\InvocationMocker::with" />
+                    <referencedMethod name="PHPUnit\Framework\MockObject\Builder\InvocationMocker::will" />
+                    <referencedMethod name="PHPUnit\Framework\MockObject\Builder\InvocationMocker::withConsecutive" />
+                    <referencedMethod name="PHPUnit\Framework\MockObject\Builder\InvocationMocker::willThrowException" />
+                </errorLevel>
+            </InternalMethod>
+        </issueHandlers>
+    <plugins>
+        <pluginClass class="Psalm\PhpUnitPlugin\Plugin"/>
+    </plugins>
+</psalm>
