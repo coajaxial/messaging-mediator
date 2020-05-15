@@ -15,7 +15,7 @@
   },
   "require-dev": {
     "phpunit/phpunit": "^9",
-    "vimeo/psalm": "@dev",
+    "vimeo/psalm": "^3.11",
     "psalm/plugin-phpunit": "@dev",
     "symfony/messenger": "^5.0"
   },
