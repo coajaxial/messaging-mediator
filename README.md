@@ -14,6 +14,8 @@ When I first implemented domain events for my domain model, I stored all events 
 that could be retrieved and cleared. It looked something like this:
 
 ```php
+<?php
+
 class MyAggregate {
     /** @var object[] */
     private $events = [];
@@ -41,6 +43,8 @@ into a `trait`.
 There are some other techniques to implement domain events, for example you can `return` them, like so:
 
 ```php
+<?php
+
 class MyAggregate {
     public function doSomething(): array {
         // ...
@@ -57,6 +61,8 @@ like for example the `self` instance for named constructors, or some calculated 
 So I don't know exactly how I came up with this new idea, but it basically is: `yield`ing the domain events:
 
 ```php
+<?php
+
 class MyAggregate {
     public function doSomething(): Generator {
         // ...
