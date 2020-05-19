@@ -8,6 +8,78 @@
 
 Send messages directly from your domain model without any dependencies
 
+```php
+<?php
+
+class Post
+{
+    /** @var int */
+    private $authorId;
+
+    /** @var bool */
+    private $published;
+
+    /** @return Generator<int, object, mixed, self> */
+    public static function draft(int $authorId): Generator
+    {
+        $post = new self();
+
+        $post->authorId = $authorId;
+        $post->published = false;
+
+        // Publish events without storing it, returning it or using a dependency
+        // to the message bus.
+        yield new PostDrafted($authorId);
+
+        return $post;
+    }
+
+    /** @return Generator<int, object, mixed, void> */
+    public function publish(): Generator
+    {
+        // Dispatch queries and get the result directly. No need of a service
+        // that gets passed as an argument!
+        // :warning: But be careful, queries are usually eventual consistent!
+        $numberOfPublishedPostsToday = yield new NumberOfPublishedPostsTodayByAuthor($this->authorId);
+
+        if ( $numberOfPublishedPostsToday > 3 ) {
+            throw new DomainException('You may only publish less than 3 posts a day.');
+        }
+
+        // Use `yield from` to call nested methods that also dispatch messages.
+        // `yield from` returns the real return value of a generator (In this
+        // case: 42).
+        $result = yield from $this->nestedMethod();
+
+        $this->published = true;
+
+        yield new PostPublished($this->authorId, $result);
+    }
+
+    private function nestedMethod(): Generator
+    {
+        $result = yield new SomeQuery();
+        yield new NestedMethodCalled($result);
+
+        return 42;
+    }
+
+    private function __construct()
+    {
+    }
+}
+```
+
+## Quick start
+
+> :warning: This library has no stable release! It currently only provides
+> a middleware for [Symfony's messenger component](https://symfony.com/doc/current/components/messenger.html)
+> and testing aids for [PHPUnit](https://phpunit.de/).
+
+```shell script
+composer require coajaxial/messaging-mediator:@dev
+```
+
 ## The idea behind this project
 
 When I first implemented domain events for my domain model, I stored all events
