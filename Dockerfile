@@ -21,14 +21,12 @@ RUN apk add --update --no-cache \
     php7-simplexml \
     git \
     openssh \
-    npm \
     && addgroup -g 1000 www \
     && adduser -D -u 1000 -G www www \
     && install -d -o www -g www /opt/project \
     && ln -s /usr/bin/php7 /usr/local/bin/php \
     && chmod 0755 /usr/local/bin/composer \
     && echo "zend_extension=xdebug.so" > /etc/php7/conf.d/xdebug.ini \
-    && npm i docsify-cli -g \
     && :
 
 WORKDIR /opt/project

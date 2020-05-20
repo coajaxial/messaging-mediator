@@ -3,8 +3,20 @@ name: Unit tests
 on:
   push:
     branches: [ master ]
+    paths:
+      - 'src/**'
+      - 'tests/Unit/**'
+      - 'composer.json'
+      - 'composer.lock'
+      - 'phpunit.xml'
   pull_request:
     branches: [ master ]
+    paths:
+      - 'src/**'
+      - 'tests/Unit/**'
+      - 'composer.json'
+      - 'composer.lock'
+      - 'phpunit.xml'
 
 jobs:
   build:

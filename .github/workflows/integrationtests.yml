@@ -3,15 +3,27 @@ name: Integration tests
 on:
   push:
     branches: [ master ]
+    paths:
+      - 'src/**'
+      - 'tests/Integration/**'
+      - 'composer.json'
+      - 'composer.lock'
+      - 'phpunit.xml'
   pull_request:
     branches: [ master ]
+    paths:
+      - 'src/**'
+      - 'tests/Integration/**'
+      - 'composer.json'
+      - 'composer.lock'
+      - 'phpunit.xml'
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - name: Install dependencies
-      run: composer install
-    - name: Unit tests
-      run: php -d zend.assertions=1 vendor/bin/phpunit --testsuite integration
+      - uses: actions/checkout@v2
+      - name: Install dependencies
+        run: composer install
+      - name: Unit tests
+        run: php -d zend.assertions=1 vendor/bin/phpunit --testsuite integration

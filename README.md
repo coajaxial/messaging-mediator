@@ -8,6 +8,24 @@
 
 Send messages directly from your domain model without any dependencies
 
+# Table of contents
+<!--ts-->
+   * [Messaging Mediator](#messaging-mediator)
+   * [Table of contents](#table-of-contents)
+   * [Example](#example)
+   * [Quick start](#quick-start)
+   * [The idea behind this project](#the-idea-behind-this-project)
+   * [What this library does](#what-this-library-does)
+   * [Contribute](#contribute)
+      * [Build docker image](#build-docker-image)
+      * [Load shell aliases](#load-shell-aliases)
+
+<!-- Added by: runner, at: Wed May 20 09:01:56 UTC 2020 -->
+
+<!--te-->
+
+# Example
+
 ```php
 <?php
 
@@ -74,7 +92,7 @@ class Post
 }
 ```
 
-## Quick start
+# Quick start
 
 > :warning: This library has no stable release! It currently only provides
 > a middleware for [Symfony's messenger component](https://symfony.com/doc/current/components/messenger.html)
@@ -84,7 +102,8 @@ class Post
 composer require coajaxial/messaging-mediator:@dev
 ```
 
-## The idea behind this project
+
+# The idea behind this project
 
 When I first implemented domain events for my domain model, I stored all events
 in a collection, that could be retrieved and cleared. It looked something like
@@ -158,7 +177,7 @@ This has several advantages:
 - You can extend this method to use it for any kind of messaging (more on that
   later)
 
-## What this library does
+# What this library does
 
 The mediator is actually quite simple: it iterates through an invoked generator
 and every `yield`ed message is dispatched on a message bus. If the message bus
@@ -199,15 +218,15 @@ The mediator builds upon the following features of PHP generators:
     $a->send(10);
     ```
 
-## Contribute
+# Contribute
 
-### Build docker image
+## Build docker image
 
 ```shell script
 docker build -t coajaxial/messaging-mediator .
 ```
 
-### Load shell aliases
+## Load shell aliases
 
 There is a shell aliases file that you can `source` to import some useful
 aliases, e.g. `composer` running from within the docker container 
