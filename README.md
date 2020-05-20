@@ -27,7 +27,7 @@ class Post
         $post->authorId = $authorId;
         $post->published = false;
 
-        // Publish events without storing it, returning it or using a dependency
+        // Publish events without storing them, returning them or using a dependency
         // to the message bus.
         yield new PostDrafted($authorId);
 
@@ -42,8 +42,12 @@ class Post
         // :warning: But be careful, queries are usually eventual consistent!
         $numberOfPublishedPostsToday = yield new NumberOfPublishedPostsTodayByAuthor($this->authorId);
 
+        // As said earlier: Don't enforce business invariants with queries, as
+        // they are eventual consistent. But if it is a soft business rule, then
+        // using queries is ok (In this case: It's ok if there may be 4+ posts
+        // from a single author a day)
         if ( $numberOfPublishedPostsToday > 3 ) {
-            throw new DomainException('You may only publish less than 3 posts a day.');
+            throw new DomainException('You may only publish 3 posts a day.');
         }
 
         // Use `yield from` to call nested methods that also dispatch messages.
