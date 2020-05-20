@@ -10,21 +10,74 @@ The messaging mediator hooks into your message bus, giving you the ability
 to `yield` messages from your application and domain layer, including message
 handlers, aggregates, value objects, domain services, etc.
 
+Publish domain events, dispatch commands and issue queries and get their results 
+without any dependency to your message bus.
+
 <!--ts-->
+   * [Installation](#installation)
+      * [Symfony messenger component (manually)](#symfony-messenger-component-manually)
    * [Use cases](#use-cases)
       * [Publish domain events](#publish-domain-events)
       * [Execute commands](#execute-commands)
       * [Issue queries to enforce <em>soft</em> business rules](#issue-queries-to-enforce-soft-business-rules)
-   * [Quick start](#quick-start)
-   * [The idea behind this project](#the-idea-behind-this-project)
+   * [Motivation](#motivation)
    * [What this library does](#what-this-library-does)
    * [Contribute](#contribute)
       * [Build docker image](#build-docker-image)
       * [Load shell aliases](#load-shell-aliases)
 
-<!-- Added by: runner, at: Wed May 20 15:33:43 UTC 2020 -->
+<!-- Added by: runner, at: Fri May 22 08:45:45 UTC 2020 -->
 
 <!--te-->
+
+# Installation
+
+> :warning: **This library has no stable release! It currently only provides
+> a middleware for [Symfony's messenger component](https://symfony.com/doc/current/components/messenger.html) 
+> and testing aids for [PHPUnit](https://phpunit.de/).**
+
+```shell script
+composer require coajaxial/messaging-mediator:@dev
+```
+
+Next, you need to configure your message bus to use the mediator. 
+
+## Symfony messenger component (manually)
+
+```php
+<?php
+
+use Coajaxial\MessagingMediator\Adapter\Messenger\MessageBusAdapter;
+use Coajaxial\MessagingMediator\Adapter\Messenger\MessagingMediatorMiddleware;
+use Coajaxial\MessagingMediator\MessagingMediator;
+use Coajaxial\MessagingMediator\Testing\LazyMessageBus;
+use Symfony\Component\Messenger\Handler\HandlersLocator;
+use Symfony\Component\Messenger\MessageBus;
+use Symfony\Component\Messenger\Middleware\HandleMessageMiddleware;
+
+$mediatorBus = new LazyMessageBus();
+
+$mediator = new MessagingMediator($mediatorBus);
+
+$bus = new MessageBus(
+    [
+        // The messaging mediator middleware should be right 
+        // before the handle message middleware
+        new MessagingMediatorMiddleware($mediator),
+        new HandleMessageMiddleware(
+            new HandlersLocator(
+                [
+                    // Your handler configuration
+                ]
+            )
+        ),
+    ]
+);
+
+$mediatorBus->initialize(new MessageBusAdapter($bus));
+
+// $bus->dispatch(new MyMessage());
+```
 
 # Use cases
 
@@ -35,15 +88,20 @@ Publish domain events from your aggregates by `yield`ing domain event instances.
 ```php
 <?php 
 
-class MyAggregate {
-    public static function init(): Generator {
+class MyAggregate 
+{
+    public static function init(): Generator 
+    {
         yield new MyAggregateInited();
+
         return new self();
     }
 }
 
-class MyHandler {
-    public function __invoke(MyCommand $command): Generator {
+class MyHandler 
+{
+    public function __invoke(MyCommand $command): Generator 
+    {
         $agg = yield from MyAggregate::init();
     }
 }
@@ -59,8 +117,10 @@ This is useful for domain event subscribers or long running processes (sagas). J
 /**
  * Give the user 100 starting credits when he signs up before 2020-01-01
  */
-class StartingCreditListener {
-    public function __invoke(UserSignedUp $event): Generator {
+class StartingCreditListener 
+{
+    public function __invoke(UserSignedUp $event): Generator 
+    {
         if ( $event->getPublishedAt() < DateTimeImmutable::createFromFormat('Y-m-d', '2021-01-01') ) {
             yield new ChargeAccount($event->getUserId(), 100);
         }       
@@ -68,20 +128,22 @@ class StartingCreditListener {
 }
 ```
 
-> :information_source: You can use `try ... catch` around the `yield` statement to catch exceptions happening during
-> command execution!
+> :information_source: **You can use `try ... catch` around the `yield` statement to catch exceptions happening 
+> during command execution.**
 
 ## Issue queries to enforce *soft* business rules
 
 You can issue queries and get it's result to enforce some business constraints
 that don't need to be transactional consistent. Just `yield` a query object and the
-mediator will send it back to the `Generator`.
+mediator will send the result back to the `Generator`.
 
 ```php
 <?php
 
-class Post {
-    public function publish(): Generator {
+class Post 
+{
+    public function publish(): Generator 
+    {
         $numberOfPublishedPostsToday = yield new NumberOfPublishedPostsTodayByAuthor($this->authorId);
 
         if ( $numberOfPublishedPostsToday >= 3 ) {
@@ -90,15 +152,18 @@ class Post {
     }
 }
 
-class PublishPostHandler {
-    public function __invoke(MyCommand $command): Generator {
+class PublishPostHandler 
+{
+    public function __invoke(MyCommand $command): Generator 
+    {
         $post = new Post(); // Usually from the repository
+
         yield from $post->publish();
     }
 }
 ```
 
-> :warning: Be absolutely sure you are enforcing a **soft** business rule!
+> :warning: **Be absolutely sure you are enforcing a **soft** business rule!**
 >
 > Queries are usually eventual consistent, so the result may not be 100%
 > true by the time issuing the query. 
@@ -107,18 +172,7 @@ class PublishPostHandler {
 > be more than 3 published posts per author and day in some (negligible) 
 > circumstances.
 
-# Quick start
-
-> :warning: This library has no stable release! It currently only provides
-> a middleware for [Symfony's messenger component](https://symfony.com/doc/current/components/messenger.html)
-> and testing aids for [PHPUnit](https://phpunit.de/).
-
-```shell script
-composer require coajaxial/messaging-mediator:@dev
-```
-
-
-# The idea behind this project
+# Motivation
 
 When I first implemented domain events for my domain model, I stored all events
 in a collection, that could be retrieved and cleared. It looked something like
