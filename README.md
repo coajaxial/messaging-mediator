@@ -1,4 +1,6 @@
-# Messaging Mediator
+<p align="center"><a href="https://symfony.com" target="_blank">
+    <img src="https://symfony.com/logos/symfony_black_02.svg">
+</a></p>
 
 ![Unit tests](https://github.com/coajaxial/messaging-mediator/workflows/Unit%20tests/badge.svg)
 ![Integration tests](https://github.com/coajaxial/messaging-mediator/workflows/Integration%20tests/badge.svg)
@@ -6,13 +8,15 @@
 [![Total Downloads](https://poser.pugx.org/coajaxial/messaging-mediator/downloads)](https://packagist.org/packages/coajaxial/messaging-mediator)
 [![License](https://poser.pugx.org/coajaxial/messaging-mediator/license)](https://packagist.org/packages/coajaxial/messaging-mediator)
 
-Send messages directly from your domain model without any dependencies
+The messaging mediator hooks into your message bus, giving you the ability
+to `yield` messages from your application and domain layer, including message
+handlers, aggregates, value objects, domain services, etc.
 
-# Table of contents
 <!--ts-->
-   * [Messaging Mediator](#messaging-mediator)
-   * [Table of contents](#table-of-contents)
-   * [Example](#example)
+   * [Use cases](#use-cases)
+      * [Publish domain events](#publish-domain-events)
+      * [Execute commands](#execute-commands)
+      * [Issue queries to enforce <em>soft</em> business rules](#issue-queries-to-enforce-soft-business-rules)
    * [Quick start](#quick-start)
    * [The idea behind this project](#the-idea-behind-this-project)
    * [What this library does](#what-this-library-does)
@@ -20,77 +24,90 @@ Send messages directly from your domain model without any dependencies
       * [Build docker image](#build-docker-image)
       * [Load shell aliases](#load-shell-aliases)
 
-<!-- Added by: runner, at: Wed May 20 09:01:56 UTC 2020 -->
+<!-- Added by: runner, at: Wed May 20 15:23:41 UTC 2020 -->
 
 <!--te-->
 
-# Example
+# Use cases
+
+## Publish domain events
+
+Publish domain events from your aggregates by `yield`ing domain event instances.
+
+```php
+<?php 
+
+class MyAggregate {
+    public static function init(): Generator {
+        yield new MyAggregateInited();
+        return new self();
+    }
+}
+
+class MyHandler {
+    public function __invoke(MyCommand $command): Generator {
+        $agg = yield from MyAggregate::init();
+    }
+}
+```
+
+## Execute commands
+
+This is useful for domain event subscribers or long running processes (sagas). Just yield a command instance and you are done.
 
 ```php
 <?php
 
-class Post
-{
-    /** @var int */
-    private $authorId;
-
-    /** @var bool */
-    private $published;
-
-    /** @return Generator<int, object, mixed, self> */
-    public static function draft(int $authorId): Generator
-    {
-        $post = new self();
-
-        $post->authorId = $authorId;
-        $post->published = false;
-
-        // Publish events without storing them, returning them or using a dependency
-        // to the message bus.
-        yield new PostDrafted($authorId);
-
-        return $post;
-    }
-
-    /** @return Generator<int, object, mixed, void> */
-    public function publish(): Generator
-    {
-        // Dispatch queries and get the result directly. No need of a service
-        // that gets passed as an argument!
-        // :warning: But be careful, queries are usually eventual consistent!
-        $numberOfPublishedPostsToday = yield new NumberOfPublishedPostsTodayByAuthor($this->authorId);
-
-        // As said earlier: Don't enforce business invariants with queries, as
-        // they are eventual consistent. But if it is a soft business rule, then
-        // using queries is ok (In this case: It's ok if there may be 4+ posts
-        // from a single author a day)
-        if ( $numberOfPublishedPostsToday > 3 ) {
-            throw new DomainException('You may only publish 3 posts a day.');
-        }
-
-        // Use `yield from` to call nested methods that also dispatch messages.
-        // `yield from` returns the real return value of a generator (In this
-        // case: 42).
-        $result = yield from $this->nestedMethod();
-
-        $this->published = true;
-
-        yield new PostPublished($this->authorId, $result);
-    }
-
-    private function nestedMethod(): Generator
-    {
-        $result = yield new SomeQuery();
-        yield new NestedMethodCalled($result);
-
-        return 42;
-    }
-
-    private function __construct()
-    {
+/**
+ * Give the user 100 starting credits when he signs up before 2020-01-01
+ */
+class StartingCreditListener {
+    public function __invoke(UserSignedUp $event): Generator {
+        if ( $event->getPublishedAt() < DateTimeImmutable::createFromFormat('Y-m-d', '2021-01-01') ) {
+            yield new ChargeAccount($event->getUserId(), 100);
+        }       
     }
 }
 ```
+
+> :information_source: You can use `try ... catch` around the `yield` statement to catch exceptions happening during
+> command execution!
+
+## Issue queries to enforce *soft* business rules
+
+You can issue queries and get it's result to enforce some business constraints
+that don't need to be transactional consistent. Just `yield` a query object and the
+mediator will send it back to the `Generator`.
+
+```php
+<?php
+
+class Post {
+    public function publish(): Generator {
+        $numberOfPublishedPostsToday = yield new NumberOfPublishedPostsTodayByAuthor($this->authorId);
+
+        if ( $numberOfPublishedPostsToday >= 3 ) {
+            throw new DomainException('Number of maximum posts per day reached.');
+        }
+    }
+}
+
+class PublishPostHandler {
+    public function __invoke(MyCommand $command): Generator {
+        $post = new Post(); // Usually from the repository
+        yield from $post->publish();
+    }
+}
+```
+
+> :warning: Be absolutely sure you are enforcing a **soft** business rule!
+>
+> Queries are usually eventual consistent, so the result may not be 100%
+> true by the time issuing the query. 
+>
+> In the example above, domain experts are ok with the fact that there may 
+> be more than 3 published posts per author and day in some (negligible) 
+> circumstances.
 
 # Quick start
 
