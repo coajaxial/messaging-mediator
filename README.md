@@ -1,6 +1,4 @@
-<p align="center"><a href="https://symfony.com" target="_blank">
-    <img src="https://symfony.com/logos/symfony_black_02.svg">
-</a></p>
+![Messaging Mediator](res/logo.png)
 
 ![Unit tests](https://github.com/coajaxial/messaging-mediator/workflows/Unit%20tests/badge.svg)
 ![Integration tests](https://github.com/coajaxial/messaging-mediator/workflows/Integration%20tests/badge.svg)
@@ -24,7 +22,7 @@ handlers, aggregates, value objects, domain services, etc.
       * [Build docker image](#build-docker-image)
       * [Load shell aliases](#load-shell-aliases)
 
-<!-- Added by: runner, at: Wed May 20 15:23:41 UTC 2020 -->
+<!-- Added by: runner, at: Wed May 20 15:33:43 UTC 2020 -->
 
 <!--te-->
 
