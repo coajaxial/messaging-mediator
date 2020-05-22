@@ -1,5 +1,6 @@
 ![Messaging Mediator](res/logo.png)
 
+![Psalm](https://github.com/coajaxial/messaging-mediator/workflows/Psalm/badge.svg)
 ![Unit tests](https://github.com/coajaxial/messaging-mediator/workflows/Unit%20tests/badge.svg)
 ![Integration tests](https://github.com/coajaxial/messaging-mediator/workflows/Integration%20tests/badge.svg)
 [![Latest Stable Version](https://poser.pugx.org/coajaxial/messaging-mediator/v/stable)](https://packagist.org/packages/coajaxial/messaging-mediator)
