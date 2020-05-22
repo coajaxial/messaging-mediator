@@ -1,0 +1,29 @@
+name: Psalm
+
+on:
+  push:
+    branches: [ master ]
+    paths:
+      - 'src/**'
+      - 'tests/**'
+      - 'composer.json'
+      - 'composer.lock'
+      - 'psalm.xml'
+  pull_request:
+    branches: [ master ]
+    paths:
+      - 'src/**'
+      - 'tests//**'
+      - 'composer.json'
+      - 'composer.lock'
+      - 'psalm.xml'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install dependencies
+        run: composer install
+      - name: Psalm
+        run: vendor/bin/psalm --show-info=true --no-progress
