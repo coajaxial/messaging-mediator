@@ -1,4 +1,6 @@
-![Messaging Mediator](res/logo.png)
+<p align="center">
+  <img src="https://raw.githubusercontent.com/coajaxial/messaging-mediator/master/res/logo.png" alt="Messaging Mediator" title="Messaging Mediator">
+</p>
 
 ![Psalm](https://github.com/coajaxial/messaging-mediator/workflows/Psalm/badge.svg)
 ![Unit tests](https://github.com/coajaxial/messaging-mediator/workflows/Unit%20tests/badge.svg)
@@ -27,7 +29,7 @@ without any dependency to your message bus.
       * [Build docker image](#build-docker-image)
       * [Load shell aliases](#load-shell-aliases)
 
-<!-- Added by: runner, at: Fri May 22 08:45:45 UTC 2020 -->
+<!-- Added by: runner, at: Sat May 23 14:47:59 UTC 2020 -->
 
 <!--te-->
 
