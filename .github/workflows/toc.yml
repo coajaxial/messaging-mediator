@@ -4,11 +4,11 @@ on:
   push:
     branches: [ master ]
     paths:
-      - 'README.md'
+      - 'docs/README.md'
   pull_request:
     branches: [ master ]
     paths:
-      - 'README.md'
+      - 'docs/README.md'
 
 jobs:
   build:
@@ -18,12 +18,12 @@ jobs:
       - name: Install toc
         run: wget https://raw.githubusercontent.com/ekalinin/github-markdown-toc/master/gh-md-toc && chmod a+x gh-md-toc
       - name: Generate toc
-        run: ./gh-md-toc --insert README.md
+        run: ./gh-md-toc --insert ./docs/README.md
       - name: Commit files
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git add README.md
+          git add ./docs/README.md
           git commit -m "Update table of contents of README"
       - name: Push changes
         uses: ad-m/github-push-action@master
