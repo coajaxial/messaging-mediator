@@ -4,3 +4,5 @@ alias php='docker run --rm -ti -v $(pwd):/opt/project -u 1000 coajaxial/messagin
 alias psalm='docker run --rm -ti -v $(pwd):/opt/project -u 1000 coajaxial/messaging-mediator vendor/bin/psalm';
 alias composer='docker run --rm -ti -v $(pwd):/opt/project -u 1000 coajaxial/messaging-mediator composer';
 alias phpunit='docker run --rm -ti -v $(pwd):/opt/project -u 1000 coajaxial/messaging-mediator php -d zend.assertions=1 vendor/bin/phpunit';
+alias npm='docker run --rm -ti -v $(pwd):/opt/project -u 1000 coajaxial/messaging-mediator npm';
+alias docsify='docker run -p 3000:3000 --rm -ti -v $(pwd):/opt/project -u 1000 coajaxial/messaging-mediator docsify';
