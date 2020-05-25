@@ -1,5 +1,5 @@
 image = coajaxial/messaging-mediator
-prefix = docker run --rm -ti -v $(shell pwd):/opt/project -u 1000 $(image)
+prefix = docker run --rm -i -v $(shell pwd):/opt/project -u 1000 $(image)
 
 .PHONY: image
 image:
