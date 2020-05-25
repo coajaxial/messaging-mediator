@@ -966,16 +966,16 @@
         },
         {
             "name": "phpunit/php-code-coverage",
-            "version": "8.0.1",
+            "version": "8.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/php-code-coverage.git",
-                "reference": "31e94ccc084025d6abee0585df533eb3a792b96a"
+                "reference": "ca6647ffddd2add025ab3f21644a441d7c146cdc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/31e94ccc084025d6abee0585df533eb3a792b96a",
-                "reference": "31e94ccc084025d6abee0585df533eb3a792b96a",
+                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/ca6647ffddd2add025ab3f21644a441d7c146cdc",
+                "reference": "ca6647ffddd2add025ab3f21644a441d7c146cdc",
                 "shasum": ""
             },
             "require": {
@@ -1026,7 +1026,13 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2020-02-19T13:41:19+00:00"
+            "funding": [
+                {
+                    "url": "https://github.com/sebastianbergmann",
+                    "type": "github"
+                }
+            ],
+            "time": "2020-05-23T08:02:54+00:00"
         },
         {
             "name": "phpunit/php-file-iterator",
@@ -1393,16 +1399,16 @@
         },
         {
             "name": "psalm/plugin-phpunit",
-            "version": "0.10.0",
+            "version": "0.10.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/psalm/psalm-plugin-phpunit.git",
-                "reference": "12b3978cea0e9ad3aa3a127a93d3b8a1ce0eb2af"
+                "reference": "138998ffd32b76a2e69eb1ff94ef2bf110967273"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/psalm/psalm-plugin-phpunit/zipball/12b3978cea0e9ad3aa3a127a93d3b8a1ce0eb2af",
-                "reference": "12b3978cea0e9ad3aa3a127a93d3b8a1ce0eb2af",
+                "url": "https://api.github.com/repos/psalm/psalm-plugin-phpunit/zipball/138998ffd32b76a2e69eb1ff94ef2bf110967273",
+                "reference": "138998ffd32b76a2e69eb1ff94ef2bf110967273",
                 "shasum": ""
             },
             "require": {
@@ -1416,7 +1422,7 @@
             "require-dev": {
                 "codeception/codeception": "^4.0.3",
                 "squizlabs/php_codesniffer": "^3.3.1",
-                "weirdan/codeception-psalm-module": "^0.4.0"
+                "weirdan/codeception-psalm-module": "^0.7.1"
             },
             "type": "psalm-plugin",
             "extra": {
@@ -1440,7 +1446,7 @@
                 }
             ],
             "description": "Psalm plugin for PHPUnit",
-            "time": "2020-04-05T22:49:26+00:00"
+            "time": "2020-05-24T20:30:10+00:00"
         },
         {
             "name": "psr/container",
