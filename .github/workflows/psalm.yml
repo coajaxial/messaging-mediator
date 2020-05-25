@@ -2,16 +2,16 @@ name: Psalm
 
 on:
   push:
-    branches: [ master ]
     paths:
+      - '.github/workflows/psalm.yml'
       - 'src/**'
       - 'tests/**'
       - 'composer.json'
       - 'composer.lock'
       - 'psalm.xml'
   pull_request:
-    branches: [ master ]
     paths:
+      - '.github/workflows/psalm.yml'
       - 'src/**'
       - 'tests//**'
       - 'composer.json'

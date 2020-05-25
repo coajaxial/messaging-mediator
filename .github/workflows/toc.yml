@@ -2,12 +2,12 @@ name: Table of contents
 
 on:
   push:
-    branches: [ master ]
     paths:
+      - '.github/workflows/toc.yml'
       - 'docs/README.md'
   pull_request:
-    branches: [ master ]
     paths:
+      - '.github/workflows/toc.yml'
       - 'docs/README.md'
 
 jobs:
