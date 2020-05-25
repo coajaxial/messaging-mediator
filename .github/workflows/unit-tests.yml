@@ -3,7 +3,7 @@ name: Unit tests
 on:
   push:
     paths:
-      - '.github/workflows/unittests.yml'
+      - '.github/workflows/unit-tests.yml'
       - 'src/**'
       - 'tests/Unit/**'
       - 'composer.json'
@@ -11,7 +11,7 @@ on:
       - 'phpunit.xml'
   pull_request:
     paths:
-      - '.github/workflows/unittests.yml'
+      - '.github/workflows/unit-tests.yml'
       - 'src/**'
       - 'tests/Unit/**'
       - 'composer.json'

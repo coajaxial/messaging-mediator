@@ -3,11 +3,11 @@ name: Table of contents
 on:
   push:
     paths:
-      - '.github/workflows/toc.yml'
+      - '.github/workflows/table-of-contents.yml'
       - 'docs/README.md'
   pull_request:
     paths:
-      - '.github/workflows/toc.yml'
+      - '.github/workflows/table-of-contents.yml'
       - 'docs/README.md'
 
 jobs:
