@@ -24,12 +24,11 @@ without any dependency to your message bus.
       * [Execute commands](#execute-commands)
       * [Issue queries to enforce <em>soft</em> business rules](#issue-queries-to-enforce-soft-business-rules)
    * [Motivation](#motivation)
-   * [What this library does](#what-this-library-does)
    * [Contribute](#contribute)
       * [Build docker image](#build-docker-image)
       * [Load shell aliases](#load-shell-aliases)
 
-<!-- Added by: runner, at: Sat May 23 14:47:59 UTC 2020 -->
+<!-- Added by: runner, at: Mon May 25 13:37:30 UTC 2020 -->
 
 <!--te-->
 
