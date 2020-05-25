@@ -13,20 +13,27 @@
             <directory name="vendor"/>
         </ignoreFiles>
     </projectFiles>
-        <issueHandlers>
-            <!-- https://github.com/sebastianbergmann/phpunit/issues/3742 - PHPUnit mock objects break all over the place -->
-            <InternalMethod>
-                <errorLevel type="suppress">
-                    <referencedMethod name="PHPUnit\Framework\MockObject\Builder\InvocationMocker::willReturn" />
-                    <referencedMethod name="PHPUnit\Framework\MockObject\Builder\InvocationMocker::method" />
-                    <referencedMethod name="PHPUnit\Framework\MockObject\Builder\InvocationMocker::willReturnOnConsecutiveCalls" />
-                    <referencedMethod name="PHPUnit\Framework\MockObject\Builder\InvocationMocker::with" />
-                    <referencedMethod name="PHPUnit\Framework\MockObject\Builder\InvocationMocker::will" />
-                    <referencedMethod name="PHPUnit\Framework\MockObject\Builder\InvocationMocker::withConsecutive" />
-                    <referencedMethod name="PHPUnit\Framework\MockObject\Builder\InvocationMocker::willThrowException" />
-                </errorLevel>
-            </InternalMethod>
-        </issueHandlers>
+    <issueHandlers>
+        <!-- https://github.com/sebastianbergmann/phpunit/issues/3742 - PHPUnit mock objects break all over the place -->
+        <InternalMethod>
+            <errorLevel type="suppress">
+                <file name="tests/Integration/Testing/MessagingTestCaseTest.php"/>
+                <referencedMethod name="PHPUnit\Framework\MockObject\Builder\InvocationMocker::willReturn"/>
+                <referencedMethod name="PHPUnit\Framework\MockObject\Builder\InvocationMocker::method"/>
+                <referencedMethod
+                        name="PHPUnit\Framework\MockObject\Builder\InvocationMocker::willReturnOnConsecutiveCalls"/>
+                <referencedMethod name="PHPUnit\Framework\MockObject\Builder\InvocationMocker::with"/>
+                <referencedMethod name="PHPUnit\Framework\MockObject\Builder\InvocationMocker::will"/>
+                <referencedMethod name="PHPUnit\Framework\MockObject\Builder\InvocationMocker::withConsecutive"/>
+                <referencedMethod name="PHPUnit\Framework\MockObject\Builder\InvocationMocker::willThrowException"/>
+            </errorLevel>
+        </InternalMethod>
+        <InternalClass>
+            <errorLevel type="suppress">
+                <file name="tests/Integration/Testing/MessagingTestCaseTest.php"/>
+            </errorLevel>
+        </InternalClass>
+    </issueHandlers>
     <plugins>
         <pluginClass class="Psalm\PhpUnitPlugin\Plugin"/>
     </plugins>
