@@ -9,6 +9,10 @@ image:
 install: image
 	$(prefix) composer install
 
+.PHONY: update
+update: install
+	$(prefix) composer update
+
 .PHONY: unit-test
 unit-test: install
 	$(prefix) vendor/bin/phpunit --testsuite unit
