@@ -18,6 +18,7 @@
         <InternalMethod>
             <errorLevel type="suppress">
                 <file name="tests/Integration/Testing/MessagingTestCaseTest.php"/>
+                <file name="src/Testing/MessagingTestCase.php"/>
                 <referencedMethod name="PHPUnit\Framework\MockObject\Builder\InvocationMocker::willReturn"/>
                 <referencedMethod name="PHPUnit\Framework\MockObject\Builder\InvocationMocker::method"/>
                 <referencedMethod

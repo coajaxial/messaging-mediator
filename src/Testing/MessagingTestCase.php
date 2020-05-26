@@ -28,16 +28,12 @@ abstract class MessagingTestCase extends TestCase
      */
     public function wrapTestExecution()
     {
-
         /** @var Generator|mixed|void $result */
         $result = call_user_func_array([$this, $this->originalName], func_get_args());
 
         if ($result instanceof Generator) {
-            /**
-             * @var mixed|void $result
-             * @psalm-suppress MixedArgumentTypeCoercion
-             */
-            $result = $this->mediator->mediate($result);
+            /** @psalm-suppress MixedArgumentTypeCoercion */
+            return $this->mediator->mediate($result);
         }
 
         return $result;
@@ -46,54 +42,55 @@ abstract class MessagingTestCase extends TestCase
     /** @return mixed|void */
     protected function runTest()
     {
-        /** @psalm-suppress InternalMethod */
         $this->originalName = $this->getName(false);
-        /** @psalm-suppress InternalMethod */
         $this->setName('wrapTestExecution');
 
         try {
             /** @var mixed|void $result */
             $result = parent::runTest();
         } finally {
-            /** @psalm-suppress InternalMethod */
             $this->setName($this->originalName);
         }
 
         return $result;
     }
 
-    final protected function setUp(): void
+    /**
+     * @before
+     * @noinspection PhpUnused
+     */
+    final protected function beforeTest(): void
     {
         $this->messageBus = new MessageBusStub();
         $this->mediator   = new MessagingMediator($this->messageBus);
 
-        /** @var mixed|void $result */
-        $result = $this->setUpDomain();
+        /** @var Generator|mixed|void $result */
+        $result = $this->setUpContext();
 
         if ($result instanceof Generator) {
             /** @psalm-suppress MixedArgumentTypeCoercion */
             $this->mediator->mediate($result);
         }
+
+        $this->messageBus->clearUnhandledMessages();
     }
 
-    /** @return mixed|void */
-    protected function setUpDomain()
+    protected function setUpContext(): Generator
     {
+        yield from [];
     }
 
-    final protected function tearDown(): void
+    /**
+     * @after
+     * @noinspection PhpUnused
+     */
+    final protected function afterTest(): void
     {
-        /** @psalm-suppress InternalMethod */
         $expectedException   = $this->getExpectedException();
         $noExceptionExpected = $expectedException === null || $expectedException === AssertionFailedError::class;
 
         if ($noExceptionExpected) {
             $this->messageBus->ensureNoUnhandledMessagesLeft();
         }
-    }
-
-    /** @return mixed|void */
-    protected function tearDownDomain()
-    {
     }
 }
