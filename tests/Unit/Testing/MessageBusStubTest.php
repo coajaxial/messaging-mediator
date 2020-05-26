@@ -7,6 +7,7 @@ use Coajaxial\MessagingMediator\Testing\MessageBusStub;
 use Coajaxial\MessagingMediator\Testing\MultipleHandlerStubsMatchTheSameMessage;
 use Coajaxial\MessagingMediator\Testing\UnhandledMessagesLeft;
 use PHPUnit\Framework\TestCase;
+use stdClass;
 use UnderflowException;
 
 /**
@@ -206,6 +207,22 @@ class MessageBusStubTest extends TestCase
 
         $this->expectException(MultipleHandlerStubsMatchTheSameMessage::class);
         $this->SUT->dispatch($message);
+    }
+
+    /**
+     * @covers \Coajaxial\MessagingMediator\Testing\MessageBusStub::clearUnhandledMessages
+     * @uses   \Coajaxial\MessagingMediator\Testing\MessageBusStub::dispatch
+     * @uses   \Coajaxial\MessagingMediator\Testing\MessageBusStub::popUnhandledMessage
+     */
+    public function test_it_can_clear_all_unhandled_messages(): void
+    {
+        $this->SUT->dispatch(new stdClass());
+        $this->SUT->dispatch(new stdClass());
+
+        $this->SUT->clearUnhandledMessages();
+
+        $this->expectException(UnderflowException::class);
+        $this->SUT->popUnhandledMessage();
     }
 
     protected function setUp(): void
