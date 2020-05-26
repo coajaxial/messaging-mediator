@@ -55,6 +55,12 @@ final class MessageBusStub implements MessageBus
         return $this->unhandledMessages->dequeue();
     }
 
+    public function clearUnhandledMessages(): void
+    {
+        /** @psalm-suppress MixedPropertyTypeCoercion */
+        $this->unhandledMessages = new SplQueue();
+    }
+
     public function ensureNoUnhandledMessagesLeft(): void
     {
         if ($this->unhandledMessages->isEmpty()) {
