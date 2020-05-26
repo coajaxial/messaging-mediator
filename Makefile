@@ -3,7 +3,7 @@ prefix = docker run --rm -i -v $(shell pwd):/opt/project -u 1000 $(image)
 
 .PHONY: image
 image:
-	docker build -t coajaxial/messaging-mediator .
+	docker build -t coajaxial/messaging-mediator - < Dockerfile
 
 .PHONY: install
 install: image
