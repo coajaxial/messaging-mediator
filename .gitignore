@@ -1,5 +1,6 @@
 vendor/
 .phpunit.result.cache
+docs/README.md.orig.*
 
 # Created by .ignore support plugin (hsz.mobi)
 ### JetBrains template
