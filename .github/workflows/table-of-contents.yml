@@ -19,13 +19,5 @@ jobs:
         run: wget https://raw.githubusercontent.com/ekalinin/github-markdown-toc/master/gh-md-toc && chmod a+x gh-md-toc
       - name: Generate toc
         run: ./gh-md-toc --insert ./docs/README.md
-      - name: Commit files
-        run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          git add ./docs/README.md
-          git commit -m "Update table of contents of README"
-      - name: Push changes
-        uses: ad-m/github-push-action@master
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v2
