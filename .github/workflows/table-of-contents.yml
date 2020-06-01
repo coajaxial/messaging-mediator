@@ -25,3 +25,5 @@ jobs:
           labels: Documentation
           title: Update table of contents
           body: This is an automatic merge request
+          branch: table-of-contents
+          commit-message: Update table of contents
