@@ -2,7 +2,7 @@ name: Update dependencies
 
 on:
   schedule:
-    - cron: '*/5 * * * *'
+    - cron: '0 0 */1 * *'
 
 jobs:
   build:
@@ -10,7 +10,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Install dependencies
-        run: composer update
+        run: composer update --no-progress
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v2
         with:
