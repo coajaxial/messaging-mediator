@@ -1,0 +1,13 @@
+   * [Installation](#installation)
+      * [Symfony messenger component (manually)](#symfony-messenger-component-manually)
+   * [Use cases](#use-cases)
+      * [Publish domain events](#publish-domain-events)
+      * [Execute commands](#execute-commands)
+      * [Issue queries to enforce <em>soft</em> business rules](#issue-queries-to-enforce-soft-business-rules)
+   * [Motivation](#motivation)
+   * [Contribute](#contribute)
+      * [Build docker image](#build-docker-image)
+      * [Load shell aliases](#load-shell-aliases)
+
+<!-- Added by: runner, at: Mon Jun  1 21:05:13 UTC 2020 -->
+
