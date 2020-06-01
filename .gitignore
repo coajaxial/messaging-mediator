@@ -1,6 +1,8 @@
 vendor/
 .phpunit.result.cache
 docs/README.md.orig.*
+docs/README.md.toc.*
+gh-md-toc
 
 # Created by .ignore support plugin (hsz.mobi)
 ### JetBrains template
