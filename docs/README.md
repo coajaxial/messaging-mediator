@@ -247,3 +247,5 @@ aliases, e.g. `composer` running from within the docker container
 ```shell script
 source .aliases
 ```
+
+## Tests
