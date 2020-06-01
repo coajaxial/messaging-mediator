@@ -27,6 +27,10 @@ without any dependency to your message bus.
    * [Contribute](#contribute)
       * [Build docker image](#build-docker-image)
       * [Load shell aliases](#load-shell-aliases)
+      * [Tests](#tests)
+
+<!-- Added by: runner, at: Mon Jun  1 21:15:53 UTC 2020 -->
+
 <!--te-->
 
 # Installation
