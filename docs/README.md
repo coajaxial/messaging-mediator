@@ -75,7 +75,7 @@ $bus = new MessageBus(
 
 $mediatorBus->initialize(new MessageBusAdapter($bus));
 
-$bus->dispatch(new MyMessage());
+// $bus->dispatch(new MyMessage());
 ```
 
 # Use cases
