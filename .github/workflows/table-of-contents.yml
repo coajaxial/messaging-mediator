@@ -21,3 +21,7 @@ jobs:
         run: ./gh-md-toc --insert ./docs/README.md
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v2
+        with:
+          labels: Documentation
+          title: Update table of contents
+          body: This is an automatic merge request
