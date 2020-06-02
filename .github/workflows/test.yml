@@ -5,7 +5,7 @@ on: ['push', 'pull_request']
 jobs:
   build:
     runs-on: ubuntu-latest
-    container: node:10.16-jessie
+    container: coajaxial/messaging-mediator
     steps:
     - uses: actions/checkout@v2
     - name: Install dependencies
