@@ -1,13 +1,12 @@
-name: Unit tests
+name: Test
 
 on: ['push', 'pull_request']
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    container: node:10.16-jessie
     steps:
     - uses: actions/checkout@v2
     - name: Install dependencies
-      using: docker
-      image: ../../Dockerfile
       run: composer install
