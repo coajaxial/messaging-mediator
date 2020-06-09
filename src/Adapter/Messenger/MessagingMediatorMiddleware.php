@@ -30,7 +30,7 @@ final class MessagingMediatorMiddleware implements MiddlewareInterface
             return $envelope;
         }
 
-        /** @var Generator<object>|mixed|null $ctx */
+        /** @var Generator|mixed $ctx */
         $ctx = $handledStamp->getResult();
 
         if (!$ctx instanceof Generator) {
@@ -38,8 +38,7 @@ final class MessagingMediatorMiddleware implements MiddlewareInterface
         }
 
         /**
-         * @psalm-suppress MixedArgumentTypeCoercion
-         * @var mixed|null $result
+         * @var mixed|void $result
          */
         $result = $this->mediator->mediate($ctx);
 

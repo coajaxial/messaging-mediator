@@ -2,23 +2,16 @@
 
 namespace Coajaxial\MessagingMediator\Test\Integration\Testing;
 
-use Coajaxial\MessagingMediator\Testing\HandlerStub;
 use Coajaxial\MessagingMediator\Testing\MessagingTestCase;
-use Coajaxial\MessagingMediator\Testing\UnhandledMessagesLeft;
 use Generator;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\TestFailure;
 use PHPUnit\Framework\TestResult;
-use PHPUnit\Framework\TestSuite;
 use stdClass;
-use UnderflowException;
 
 class MessagingTestCaseTest extends TestCase
 {
-    /** @var TestSuite */
-    private $testSuite;
-
-    public function test_it_will_run_normal_test_like_usual(): void
+    public function test_it_will_run_void_tests_like_usual(): void
     {
         $test = new class('test') extends MessagingTestCase {
             public function test(): void
@@ -27,13 +20,26 @@ class MessagingTestCaseTest extends TestCase
             }
         };
 
-        $this->testSuite->addTest($test);
-        $result = $this->testSuite->run();
+        $result = $test->run();
 
         self::assertRunWasSuccessful($result);
     }
 
-    public function test_it_will_run_normal_test_with_parameters_like_usual(): void
+    public function test_it_will_run_failing_void_tests_like_usual(): void
+    {
+        $test = new class('test') extends MessagingTestCase {
+            public function test(): void
+            {
+                self::assertTrue(false);
+            }
+        };
+
+        $result = $test->run();
+
+        self::assertRunFailedWithMessage($result, 'Failed asserting that false is true.');
+    }
+
+    public function test_it_will_run_void_test_with_parameters_like_usual(): void
     {
         $test = new class('test', [42, 'Hello World'], 'test') extends MessagingTestCase {
             public function test(int $i, string $j): void
@@ -43,8 +49,7 @@ class MessagingTestCaseTest extends TestCase
             }
         };
 
-        $this->testSuite->addTest($test);
-        $result = $this->testSuite->run();
+        $result = $test->run();
 
         self::assertRunWasSuccessful($result);
     }
@@ -58,12 +63,44 @@ class MessagingTestCaseTest extends TestCase
             }
         };
 
-        $this->testSuite->addTest($test);
-        $result = $this->testSuite->run();
+        $result = $test->run();
 
-        self::assertFalse($result->wasSuccessful());
-        self::assertEquals(1, $result->errorCount());
-        self::assertStringContainsString(UnhandledMessagesLeft::class, $result->errors()[0]->getExceptionAsString());
+        self::assertRunFailedWithMessage($result, 'There are/is 1 message(s) left');
+    }
+
+    public function test_it_will_not_fail_if_unhandled_messages_are_cleared(): void
+    {
+        $test = new class('test') extends MessagingTestCase {
+            public function test(): Generator
+            {
+                yield new stdClass();
+                $this->clearUnhandledMessages();
+            }
+        };
+
+        $result = $test->run();
+
+        self::assertRunWasSuccessful($result);
+    }
+
+    public function test_it_will_not_fail_if_unhandled_messages_are_popped(): void
+    {
+        $test = new class('test') extends MessagingTestCase {
+            public function test(): Generator
+            {
+                /** @noinspection PhpUnnecessaryLocalVariableInspection */
+                $message = new stdClass();
+
+                yield $message;
+
+                $poppedMessage = $this->popUnhandledMessage();
+                self::assertSame($message, $poppedMessage);
+            }
+        };
+
+        $result = $test->run();
+
+        self::assertRunWasSuccessful($result);
     }
 
     public function test_it_will_clear_all_unhandled_messages_of_setUpDomain(): void
@@ -71,8 +108,6 @@ class MessagingTestCaseTest extends TestCase
         $test = new class('test') extends MessagingTestCase {
             public function test(): void
             {
-                $this->expectException(UnderflowException::class);
-                $this->messageBus->popUnhandledMessage();
             }
 
             protected function setUpContext(): Generator
@@ -81,54 +116,49 @@ class MessagingTestCaseTest extends TestCase
             }
         };
 
-        $this->testSuite->addTest($test);
-        $result = $this->testSuite->run();
+        $result = $test->run();
 
         self::assertRunWasSuccessful($result);
     }
 
-    public function test_it_will_mediate_tests_that_return_a_generator(): void
+    private static function resultErrorsToString(TestResult $result): string
     {
-        $test = new class('test') extends MessagingTestCase {
-            public function test(): Generator
-            {
-                $stub = $this->createMock(HandlerStub::class);
+        $string = implode(
+            PHP_EOL,
+            array_map(
+                static function (TestFailure $error): string {
+                    return $error->toString();
+                },
+                array_merge($result->errors(), $result->failures()),
+            )
+        );
 
-                $stub->method('matches')->willReturn(true);
-                $stub->expects(self::once())->method('invoke');
+        $string = self::removeNonPrintableCharacters($string);
 
-                $this->messageBus->activate($stub);
-
-                yield new stdClass();
-            }
-        };
-
-        $this->testSuite->addTest($test);
-        $result = $this->testSuite->run();
-
-        self::assertRunWasSuccessful($result);
-    }
-
-    protected function setUp(): void
-    {
-        $this->testSuite = new TestSuite();
+        return $string;
     }
 
     private static function assertRunWasSuccessful(TestResult $result): void
     {
-        $convertToString = static function (TestFailure $error): string {
-            return $error->toString();
-        };
-
         self::assertTrue(
             $result->wasSuccessful(),
             sprintf(
-                "Failed asserting that run was successful. Errors(%d), Failures(%d):".PHP_EOL."%s".PHP_EOL."%s",
+                'Failed asserting that run was successful. Errors: %d, Failures: %d:'.PHP_EOL.'%s',
                 $result->errorCount(),
                 $result->failureCount(),
-                implode(PHP_EOL, array_map($convertToString, $result->errors())),
-                implode(PHP_EOL, array_map($convertToString, $result->failures())),
+                self::resultErrorsToString($result)
             )
         );
+    }
+
+    private static function assertRunFailedWithMessage(TestResult $result, string $message): void
+    {
+        self::assertFalse($result->wasSuccessful());
+        self::assertStringContainsString($message, self::resultErrorsToString($result));
+    }
+
+    private static function removeNonPrintableCharacters(string $string): string
+    {
+        return preg_replace('/[\x00-\x1F\x7F]/u', '', $string);
     }
 }
