@@ -8,7 +8,7 @@ interface MessagingMediatorInterface
 {
     /**
      * @psalm-template TReturn
-     * @psalm-param    Generator<mixed, object, mixed, TReturn> $ctx
+     * @psalm-param    Generator<mixed, mixed, mixed, TReturn> $ctx
      * @psalm-return   TReturn
      *
      * @return mixed

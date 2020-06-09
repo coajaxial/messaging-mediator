@@ -2,6 +2,7 @@
 
 namespace Coajaxial\MessagingMediator\Test\Unit;
 
+use Coajaxial\MessagingMediator\IncomprehensibleMessage;
 use Coajaxial\MessagingMediator\MessageBus;
 use Coajaxial\MessagingMediator\MessagingMediator;
 use Generator;
@@ -41,7 +42,6 @@ class MessagingMediatorTest extends TestCase
 
     public function test_it_dispatches_yielded_messages_on_bus(): void
     {
-        /** @psalm-var Generator<object> $ctx */
         $ctx = (static function (): Generator {
             yield new MessagingMediatorTest_MessageA();
         })();
@@ -58,7 +58,6 @@ class MessagingMediatorTest extends TestCase
         $actualResult   = null;
         $expectedResult = 42;
 
-        /** @psalm-var Generator<object> $ctx */
         $ctx = (static function () use (&$actualResult): Generator {
             /** @var int $actualResult */
             $actualResult = yield new MessagingMediatorTest_MessageA();
@@ -76,7 +75,6 @@ class MessagingMediatorTest extends TestCase
 
     public function test_nested_contexts(): void
     {
-        /** @psalm-var Generator<object> $increasedAnswerToLiveCtx */
         $increasedAnswerToLiveCtx = (static function () {
             /** @var int $answerToLive */
             $answerToLive = yield new MessagingMediatorTest_MessageB();
@@ -89,7 +87,6 @@ class MessagingMediatorTest extends TestCase
             return $answerToLive + 1;
         })();
 
-        /** @psalm-var Generator<mixed, object, mixed, int> $mainContext */
         $mainContext = (static function () use (&$increasedAnswerToLiveCtx) {
             yield new MessagingMediatorTest_MessageA();
             /** @var int $increasedAnswerToLive */
@@ -124,7 +121,6 @@ class MessagingMediatorTest extends TestCase
 
     public function test_it_will_throw_exception_in_context_when_message_dispatch_throws(): void
     {
-        /** @psalm-var Generator<object> $ctx */
         $ctx = (static function (): Generator {
             try {
                 yield new MessagingMediatorTest_MessageA();
@@ -144,7 +140,6 @@ class MessagingMediatorTest extends TestCase
 
     public function test_it_will_continue_normally_when_exception_is_catched_in_context(): void
     {
-        /** @psalm-var Generator<object> $ctx */
         $ctx = (static function (): Generator {
             try {
                 yield new MessagingMediatorTest_MessageA();
@@ -168,6 +163,19 @@ class MessagingMediatorTest extends TestCase
                 )
             );
 
+        $this->SUT->mediate($ctx);
+    }
+
+    /**
+     * @uses \Coajaxial\MessagingMediator\IncomprehensibleMessage::notAnObject()
+     */
+    public function test_it_will_throw_when_message_is_no_object(): void
+    {
+        $ctx = (static function (): Generator {
+            yield 42;
+        })();
+
+        $this->expectException(IncomprehensibleMessage::class);
         $this->SUT->mediate($ctx);
     }
 

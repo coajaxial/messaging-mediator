@@ -4,17 +4,15 @@ namespace Coajaxial\MessagingMediator\Testing;
 
 use Coajaxial\MessagingMediator\MessagingMediator;
 use Generator;
-use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @codeCoverageIgnore This can only be tested with an integration test
- * @see                \Coajaxial\MessagingMediator\Test\Integration\Testing\MessagingTestCaseTest
+ * @codeCoverageIgnore
  */
 abstract class MessagingTestCase extends TestCase
 {
     /** @var MessageBusStub */
-    protected $messageBus;
+    private $messageBus;
 
     /** @var string */
     private $originalName;
@@ -23,31 +21,33 @@ abstract class MessagingTestCase extends TestCase
     private $mediator;
 
     /**
-     * @return mixed|void
+     * @return mixed
      * @noinspection PhpUnused
      */
-    public function wrapTestExecution()
+    final public function wrapTestExecution()
     {
-        /** @var Generator|mixed|void $result */
-        $result = call_user_func_array([$this, $this->originalName], func_get_args());
+        /** @var Generator|mixed $result */
+        $result = $this->{$this->originalName}(...func_get_args());
 
         if ($result instanceof Generator) {
-            /** @psalm-suppress MixedArgumentTypeCoercion */
             return $this->mediator->mediate($result);
         }
 
         return $result;
     }
 
-    /** @return mixed|void */
-    protected function runTest()
+    /** @return mixed */
+    final protected function runTest()
     {
         $this->originalName = $this->getName(false);
         $this->setName('wrapTestExecution');
 
         try {
-            /** @var mixed|void $result */
+            /** @var mixed $result */
             $result = parent::runTest();
+            if (!$this->isExceptionExpected()) {
+                $this->messageBus->ensureNoUnhandledMessagesLeft();
+            }
         } finally {
             $this->setName($this->originalName);
         }
@@ -63,15 +63,7 @@ abstract class MessagingTestCase extends TestCase
     {
         $this->messageBus = new MessageBusStub();
         $this->mediator   = new MessagingMediator($this->messageBus);
-
-        /** @var Generator|mixed|void $result */
-        $result = $this->setUpContext();
-
-        if ($result instanceof Generator) {
-            /** @psalm-suppress MixedArgumentTypeCoercion */
-            $this->mediator->mediate($result);
-        }
-
+        $this->mediator->mediate($this->setUpContext());
         $this->messageBus->clearUnhandledMessages();
     }
 
@@ -80,17 +72,21 @@ abstract class MessagingTestCase extends TestCase
         yield from [];
     }
 
-    /**
-     * @after
-     * @noinspection PhpUnused
-     */
-    final protected function afterTest(): void
+    final protected function clearUnhandledMessages(): void
     {
-        $expectedException   = $this->getExpectedException();
-        $noExceptionExpected = $expectedException === null || $expectedException === AssertionFailedError::class;
+        $this->messageBus->clearUnhandledMessages();
+    }
 
-        if ($noExceptionExpected) {
-            $this->messageBus->ensureNoUnhandledMessagesLeft();
-        }
+    final protected function popUnhandledMessage(): object
+    {
+        return $this->messageBus->popUnhandledMessage();
+    }
+
+    private function isExceptionExpected(): bool
+    {
+        return $this->getExpectedException() !== null
+            || $this->getExpectedExceptionCode() !== null
+            || $this->getExpectedExceptionMessage() !== null
+            || $this->getExpectedExceptionMessageRegExp() !== null;
     }
 }

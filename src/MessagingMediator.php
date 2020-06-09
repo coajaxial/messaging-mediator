@@ -18,7 +18,11 @@ final class MessagingMediator implements MessagingMediatorInterface
     public function mediate(Generator $ctx)
     {
         while ($ctx->valid()) {
+            /** @var object|mixed $message */
             $message = $ctx->current();
+            if (!is_object($message)) {
+                throw IncomprehensibleMessage::notAnObject($message);
+            }
             try {
                 /** @psalm-suppress MixedAssignment */
                 $result = $this->messageBus->dispatch($message);
