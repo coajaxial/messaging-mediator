@@ -174,6 +174,29 @@ class PublishPostHandler
 > be more than 3 published posts per author and day in some (negligible) 
 > circumstances.
 
+# Psalm support
+
+To enable type detection for yielded query results, just add this to your 
+query classes:
+
+```php
+/**
+ * This query returns the current date.
+ *
+ * @psalm-template void
+ * @psalm-yield DateTimeImmutable
+ */
+final class Now {
+}
+
+class MyAggregate {
+    public function test(): Generator {
+        $now = yield Now();
+        // Psalm now knows that $now is a DateTimeImmutable
+    }
+}
+```
+
 # Motivation
 
 When I first implemented domain events for my domain model, I stored all events
