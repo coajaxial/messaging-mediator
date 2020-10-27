@@ -23,6 +23,7 @@ without any dependency to your message bus.
       * [Publish domain events](#publish-domain-events)
       * [Execute commands](#execute-commands)
       * [Issue queries to enforce <em>soft</em> business rules](#issue-queries-to-enforce-soft-business-rules)
+   * [Psalm support](#psalm-support)
    * [Motivation](#motivation)
    * [Contribute](#contribute)
       * [Build docker image](#build-docker-image)
